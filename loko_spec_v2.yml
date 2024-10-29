@@ -1,0 +1,879 @@
+swagger: '2.0'
+info:
+  version: '2024-08-22'
+  title: LokoPay API
+  contact:
+    email: dev@lokopay.io
+    name: LokoPay Dev Team
+    url: 'https://lokopay.io'
+
+host: api.lokopay.io
+basePath: /v1
+schemes:
+  - https
+
+consumes:
+  - application/json
+produces:
+  - application/json
+
+securityDefinitions:
+  # ApiKeyAuth:
+  #   type: apiKey
+  #   in: header
+  #   name: loko-publishable-key 
+  publishableKeyAuth:
+    type: apiKey
+    in: "header"
+    name: "loko-publishable-key"
+tags:
+  - name: payments
+    description: APIs for payments 
+  - name: payouts
+    description: APIs for payouts
+  - name: networkfees
+    description: APIs for network fee
+  - name: customer_wallets
+    description: APIs for customer wallets
+
+paths:
+
+  /payments:
+    get:
+      summary: 'Get payments'
+      tags:
+        - payments
+      produces:
+        - application/json
+      security:
+        - publishableKeyAuth: []
+      parameters:
+        - in: query
+          name: starting_after
+          type: string
+          required: false
+        - in: query
+          name: ending_before
+          type: string
+          required: false
+        - in: query
+          name: created_from
+          type: integer
+          required: false
+        - in: query
+          name: created_to
+          type: integer
+          required: false
+        - in: query
+          name: completed_from
+          type: integer
+          required: false
+        - in: query
+          name: completed_to
+          type: integer
+          required: false
+        - in: query
+          name: status
+          type: string
+          required: false
+        - in: query
+          name: limit
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 10
+          required: false
+        - name: loko-object-secret
+          required: false
+          in: header
+          type: string
+      operationId: getPayments
+      responses:
+        200:
+          description: 'return payment objects'
+          schema:
+            $ref: '#/definitions/GetPaymentsResponse'
+          headers:
+            Access-Control-Expose-Headers:
+              type: string
+            Content-Range:
+              type: string
+        400:
+          $ref: '#/responses/400'
+        401:
+          $ref: '#/responses/401'
+    post:
+      summary: 'Create a payment'
+      tags:
+        - payments
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      security:
+        - publishableKeyAuth: []
+      operationId: createPayment
+      parameters:
+        - name: createPaymentRequest
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/CreatePaymentRequest'
+      responses:
+        200:
+          description: 'successful create payment'
+          schema:
+            $ref: '#/definitions/Payment'
+        400:
+          $ref: '#/responses/401'
+        401:
+          $ref: '#/responses/401'
+  /payments/{id}:
+    get:
+      summary: 'Get payment detail'
+      tags:
+        - payments
+      produces:
+        - application/json
+      security:
+        - publishableKeyAuth: []
+      operationId: getPayment
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
+        - name: loko-object-secret
+          required: false
+          in: header
+          type: string
+      responses:
+        200:
+          description: 'return payment objects'
+          schema:
+            $ref: '#/definitions/Payment'
+          headers:
+            Access-Control-Expose-Headers:
+              type: string
+            Content-Range:
+              type: string
+        400:
+          $ref: '#/responses/400'
+        401:
+          $ref: '#/responses/401'
+  /payments/{id}/cancel:
+    post:
+      summary: 'Cancel payment'
+      tags:
+        - payments
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      security:
+        - publishableKeyAuth: []
+      operationId: cancelPayment
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
+      responses:
+        200:
+          description: 'successful cancel payment'
+          schema:
+            $ref: '#/definitions/Payment'
+        400:
+          $ref: '#/responses/401'
+        401:
+          $ref: '#/responses/401'
+  /payments/{id}/confirm:
+    post:
+      summary: 'Confirm payment'
+      tags:
+        - payments
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      security:
+        - publishableKeyAuth: []
+      operationId: confirmPayment
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
+        - name: confirmPaymentRequest
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/ConfirmPaymentRequest'
+      responses:
+        200:
+          description: 'successful confirm payment'
+          schema:
+            $ref: '#/definitions/Payment'
+        400:
+          $ref: '#/responses/401'
+        401:
+          $ref: '#/responses/401'
+  /payments/{id}/refund:
+    post:
+      summary: 'Refund payment'
+      tags:
+        - payments
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      security:
+        - publishableKeyAuth: [ ]
+      operationId: RefundPayment
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
+      responses:
+        200:
+          description: 'successful refund payment'
+          schema:
+            $ref: '#/definitions/Payment'
+        400:
+          $ref: '#/responses/401'
+        401:
+          $ref: '#/responses/401'
+
+  /payouts:
+    get:
+      summary: 'Get payouts'
+      tags:
+        - payouts
+      produces:
+        - application/json
+      security:
+        - publishableKeyAuth: [ ]
+      parameters:
+        - in: query
+          name: starting_after
+          type: string
+          required: false
+        - in: query
+          name: ending_before
+          type: string
+          required: false
+        - in: query
+          name: created_from
+          type: integer
+          required: false
+        - in: query
+          name: created_to
+          type: integer
+          required: false
+        - in: query
+          name: limit
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 10
+          required: false
+        - name: loko-object-secret
+          required: false
+          in: header
+          type: string
+        - in: query
+          name: completed_from
+          type: integer
+          required: false
+        - in: query
+          name: completed_to
+          type: integer
+          required: false
+        - in: query
+          name: status
+          type: string
+          required: false
+      operationId: getPayouts
+      responses:
+        200:
+          description: 'return payout objects'
+          schema:
+            $ref: '#/definitions/GetPayoutsResponse'
+          headers:
+            Access-Control-Expose-Headers:
+              type: string
+            Content-Range:
+              type: string
+        400:
+          $ref: '#/responses/400'
+        401:
+          $ref: '#/responses/401'
+    post:
+      summary: 'Create a payment'
+      tags:
+        - payouts
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      security:
+        - publishableKeyAuth: [ ]
+      operationId: createPayout
+      parameters:
+        - name: createPoutRequest
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/CreatePayoutRequest'
+      responses:
+        200:
+          description: 'successful create payout'
+          schema:
+            $ref: '#/definitions/Payout'
+        400:
+          $ref: '#/responses/401'
+        401:
+          $ref: '#/responses/401'
+  /payouts/{id}:
+    get:
+      summary: 'Get payout detail'
+      tags:
+        - payouts
+      produces:
+        - application/json
+      security:
+        - publishableKeyAuth: [ ]
+      operationId: getPayout
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
+        - name: loko-object-secret
+          required: false
+          in: header
+          type: string
+      responses:
+        200:
+          description: 'return payout objects'
+          schema:
+            $ref: '#/definitions/Payout'
+          headers:
+            Access-Control-Expose-Headers:
+              type: string
+            Content-Range:
+              type: string
+        400:
+          $ref: '#/responses/400'
+        401:
+          $ref: '#/responses/401'
+  /payouts/{id}/cancel:
+    post:
+      summary: 'Cancel payout'
+      tags:
+        - payouts
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      security:
+        - publishableKeyAuth: [ ]
+      operationId: cancelPayout
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
+      responses:
+        200:
+          description: 'successful cancel payout'
+          schema:
+            $ref: '#/definitions/Payout'
+        400:
+          $ref: '#/responses/401'
+        401:
+          $ref: '#/responses/401'
+  /payouts/{id}/confirm:
+    post:
+      summary: 'Confirm payout'
+      tags:
+        - payouts
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      security:
+        - publishableKeyAuth: [ ]
+      operationId: confirmPayout
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
+        - name: confirmPayoutRequest
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/ConfirmPayoutRequest'
+      responses:
+        200:
+          description: 'successful confirm payout'
+          schema:
+            $ref: '#/definitions/Payout'
+        400:
+          $ref: '#/responses/401'
+        401:
+          $ref: '#/responses/401'
+
+  /networkfees:
+    get:
+      summary: 'Get network fees'
+      tags:
+        - networkfees
+      produces:
+        - application/json
+      security:
+        - publishableKeyAuth: [ ]
+      operationId: getNetworkFees
+      responses:
+        200:
+          description: 'return network fees'
+          schema:
+            type: object
+            properties:
+              object:
+                type: string
+              destination_network_details:
+                type: array
+                items:
+                  $ref: '#/definitions/DestinationNetworkDetail'
+          headers:
+            Access-Control-Expose-Headers:
+              type: string
+            Content-Range:
+              type: string
+        400:
+          $ref: '#/responses/400'
+        401:
+          $ref: '#/responses/401'
+
+  /customer_wallets:
+    post:
+      summary: 'Create a customer wallet'
+      tags:
+        - customer_wallets
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      security:
+        - publishableKeyAuth: [ ]
+      operationId: createCustomerWallet
+      parameters:
+        - name: createCustomerWalletRequest
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/CreateCustomerWalletRequest'
+      responses:
+        200:
+          description: 'successful create customer wallet'
+          schema:
+            $ref: '#/definitions/CustomerWallet'
+        400:
+          $ref: '#/responses/401'
+        401:
+          $ref: '#/responses/401'
+
+responses:
+  400:
+    description: 'returns error if request is invalid'
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+  401:
+    description: 'returns error of invalid auth token is passed'
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+  403:
+    description: 'returns error if missing scope'
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+  404:
+    description: 'returns error if invalid user id is passed'
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+  500:
+    description: 'returns error'
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+
+definitions:
+
+  SuccessResponse:
+    type: object
+    properties:
+      success:
+        type: boolean
+    required:
+    - success
+  ErrorResponse:
+    type: object
+    properties:
+      code:
+        type: integer
+      code_name:
+        type: string
+      message:
+        type: string
+    required:
+    - code
+    - message
+  GeneralResponse:
+    type: object
+    properties:
+      status:
+        type: string
+      message:
+        type: string
+      token:
+        type: string
+    required:
+      - status
+      - message
+
+  OrderItem:
+    type: object
+    properties:
+      name:
+        type: string
+      price:
+        type: integer
+      currency:
+        type: string
+      quantity:
+        type: integer
+      metadata:
+        type: string
+
+  Order:
+    type: object
+    properties:
+      order_id:
+        type: string
+      name:
+        type: string
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/OrderItem'
+      subtotal:
+        type: integer
+      sales_tax:
+        type: integer
+      discount:
+        type: integer
+      shipping:
+        type: integer
+      total:
+        type: integer
+      currency:
+        type: string
+
+  CryptoCurrency:
+    type: object
+    properties:
+      id:
+        type: string
+      network:
+        type: string
+      price:
+        type: number
+      price_pair:
+        type: string
+      amount:
+        type: string
+      currency:
+        type: string
+      description:
+        type: string
+
+  BlockchainTransactionDetail:
+    type: object
+    properties:
+      id:
+        type: string
+      amount:
+        type: string
+      currency:
+        type: string
+      network:
+        type: string
+      address:
+        type: string
+      tx_hash:
+        type: string
+      confirmations:
+        type: integer
+      block_time:
+        type: integer
+      block_height:
+        type: integer
+
+  PaymentCustomer:
+    type: object
+    properties:
+      id:
+        type: string
+      email:
+        type: string
+      ip_address:
+        type: string
+      destination_address:
+        type: string
+      destination_network:
+        type: string
+      destination_currency:
+        type: string
+
+  Payment:
+    type: object
+    properties:
+      id:
+        type: string
+      object:
+        type: string
+      amount:
+        type: string
+      currency:
+        type: string
+      amount_paid:
+        type: string
+      currency_paid:
+        type: string
+      amount_due:
+        type: string
+      currency_due:
+        type: string
+      currency_due_network:
+        type: string
+      currency_due_address:
+        type: string
+      description:
+        type: string
+      customer:
+        $ref: '#/definitions/PaymentCustomer'
+      supported_cryptocurrencies:
+        type: array
+        items:
+          $ref: '#/definitions/CryptoCurrency'
+      blockchain_transaction_details:
+        type: array
+        items:
+          $ref: '#/definitions/BlockchainTransactionDetail'
+      price_expires_at:
+        type: integer
+      expires_at:
+        type: integer
+      canceled_at:
+        type: integer
+      status:
+        type: string
+      created_at:
+        type: integer
+      obj_secret:
+        type: string
+      failed_reason:
+        type: string
+
+  CreatePaymentRequest:
+    type: object
+    properties:
+      amount:
+        type: string
+      currency:
+        type: string
+      description:
+        type: string
+      customer:
+        $ref: '#/definitions/PaymentCustomer'
+      order:
+        $ref: '#/definitions/Order'
+
+  ConfirmPaymentRequest:
+    type: object
+    properties:
+      cryptocurrency:
+        type: object
+        $ref: '#/definitions/CryptoCurrency'
+
+
+  DestinationNetworkDetail:
+    type: object
+    properties:
+      id:
+        type: string
+      destination_amount:
+        type: string
+      destination_currency:
+        type: string
+      destination_network:
+        type: string
+      destination_network_description:
+        type: string
+      destination_transaction_fee:
+        type: string
+      destination_transaction_fee_currency:
+        type: string
+      destination_network_fee:
+        type: string
+      destination_network_fee_currency:
+        type: string
+      destination_network_fee_monetary:
+        type: string
+
+  Payout:
+    type: object
+    properties:
+      id:
+        type: string
+      object:
+        type: string
+      amount:
+        type: string
+      currency:
+        type: string
+      description:
+        type: string
+      customer:
+        $ref: '#/definitions/PaymentCustomer'
+      destination_network_details:
+        type: array
+        items:
+          $ref: '#/definitions/DestinationNetworkDetail'
+      blockchain_transaction_details:
+        type: array
+        items:
+          $ref: '#/definitions/BlockchainTransactionDetail'
+      canceled_at:
+        type: integer
+      status:
+        type: string
+      created_at:
+        type: integer
+      obj_secret:
+        type: string
+      failed_reason:
+        type: string
+      transfer_with_native_token:
+        $ref: '#/definitions/TransferWithNativeToken'
+
+  TransferWithNativeToken:
+    type: object
+    properties:
+      enabled:
+        type: boolean
+      base_amount:
+        type: string
+      base_network:
+        type: string
+      base_currency:
+        type: string
+
+  CreatePayoutRequest:
+    type: object
+    properties:
+      amount:
+        type: string
+      currency:
+        type: string
+      description:
+        type: string
+      customer:
+        $ref: '#/definitions/PaymentCustomer'
+      transfer_with_native_token:
+        $ref: '#/definitions/TransferWithNativeToken'
+
+  ConfirmPayoutRequest:
+    type: object
+    properties:
+      destination_network_details:
+        type: array
+        items:
+          $ref: '#/definitions/DestinationNetworkDetail'
+
+  GetPaymentsResponse:
+    type: object
+    properties:
+      limit:
+        type: integer
+      starting_after:
+        type: string
+      ending_before:
+        type: string
+      data:
+        type: array
+        items:
+          $ref: '#/definitions/Payment'
+  GetPayoutsResponse:
+    type: object
+    properties:
+      limit:
+        type: integer
+      starting_after:
+        type: string
+      ending_before:
+        type: string
+      data:
+        type: array
+        items:
+          $ref: '#/definitions/Payout'
+
+  CreateCustomerWalletRequest:
+    type: object
+    properties:
+      currency:
+        type: string
+        description: Three-letter [ISO currency
+            code](https://www.iso.org/iso-4217-currency-codes.html) for FIAT, three or four letter code for cryptocurrencies. Cryptocurrency code list
+        example: 'BTC'
+      network:
+        type: string
+        description: The cryptocurrency network
+      customer:
+        $ref: '#/definitions/PaymentCustomer'
+
+  WalletAddress:
+    type: object
+    properties:
+      id:
+        type: string
+      address:
+        type: string
+      address_currency:
+        type: string
+      address_network:
+        type: string
+      description:
+        type: string
+
+  CustomerWallet:
+    type: object
+    properties:
+      id:
+        type: string
+      object:
+        type: string
+      object_secret:
+        type: string
+      supported_cryptocurrencies:
+        type: array
+        items:
+          $ref: '#/definitions/CryptoCurrency'
+      customer:
+        $ref: '#/definitions/PaymentCustomer'
+      wallet_addresses:
+        type: array
+        items:
+          $ref: '#/definitions/WalletAddress'
+
