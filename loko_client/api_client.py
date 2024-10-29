@@ -22,6 +22,8 @@ import mimetypes
 import os
 import re
 import tempfile
+import time
+import uuid
 
 from urllib.parse import quote
 from typing import Tuple, Optional, List, Dict, Union
@@ -31,6 +33,7 @@ from loko_client.configuration import Configuration
 from loko_client.api_response import ApiResponse, T as ApiResponseT
 import loko_client.models
 from loko_client import rest
+from loko_client.utils import Utils
 from loko_client.exceptions import (
     ApiValueError,
     ApiException,
@@ -269,6 +272,14 @@ class ApiClient:
         :return: RESTResponse
         """
 
+        timestamp = str(int(time.time()))
+        # 生成一个新的 UUID
+        nonce = str(uuid.uuid4())
+        message = url + json.dumps(body) + nonce + timestamp
+        signature = Utils.generate_hmac(message, self.configuration.secret_key)
+        header_params['loko-timestamp'] = timestamp
+        header_params['loko-nonce'] = nonce
+        header_params['loko-signature'] = signature
         try:
             # perform request and return response
             response_data = self.rest_client.request(

@@ -29,6 +29,9 @@ REQUIRES = [
     "python-dateutil >= 2.8.2",
     "pydantic >= 2",
     "typing-extensions >= 4.7.1",
+    "cffi >= 1.17.1",
+    "cryptography >= 43.0.3",
+    "pycparser >= 2.22",
 ]
 
 setup(

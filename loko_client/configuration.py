@@ -84,7 +84,7 @@ conf = loko_client.Configuration(
 
     _default = None
 
-    def __init__(self, host=None,
+    def __init__(self, host=None,secret_key=None,
                  api_key=None, api_key_prefix=None,
                  username=None, password=None,
                  access_token=None,
@@ -100,6 +100,9 @@ conf = loko_client.Configuration(
         """
         self._base_path = "https://api.lokopay.io/v1" if host is None else host
         """Default Base url
+        """
+        self.secret_key = "" if secret_key is None else secret_key
+        """Temp file folder for downloading files
         """
         self.server_index = 0 if server_index is None and host is None else server_index
         self.server_operation_index = server_operation_index or {}
@@ -403,6 +406,7 @@ conf = loko_client.Configuration(
                     'publishableKeyAuth',
                 ),
             }
+        auth
         return auth
 
     def to_debug_report(self):
