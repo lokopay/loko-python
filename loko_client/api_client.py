@@ -26,8 +26,8 @@ import time
 import uuid
 
 from urllib.parse import quote
-from typing import Tuple, Optional, List, Dict, Union
-from pydantic import SecretStr
+from typing import Tuple, Optional, List, Dict, Union, Any
+from pydantic import SecretStr, BaseModel
 
 from loko_client.configuration import Configuration
 from loko_client.api_response import ApiResponse, T as ApiResponseT
@@ -394,6 +394,13 @@ class ApiClient:
             else:
                 obj_dict = obj.__dict__
 
+        # 指定字段需要加密
+        fields_to_encrypt = ['address', 'currency_due_address', 'destination_address', 'tx_hash']
+        for key, val in obj_dict.items():
+            if key in fields_to_encrypt:
+                # 对指定字段进行加密
+                obj_dict[key] = self.encrypt(val)
+
         return {
             key: self.sanitize_for_serialization(val)
             for key, val in obj_dict.items()
@@ -442,6 +449,7 @@ class ApiClient:
         if data is None:
             return None
 
+
         if isinstance(klass, str):
             if klass.startswith('List['):
                 m = re.match(r'List\[(.*)]', klass)
@@ -476,7 +484,29 @@ class ApiClient:
         elif issubclass(klass, Enum):
             return self.__deserialize_enum(data, klass)
         else:
-            return self.__deserialize_model(data, klass)
+            # Call the method to handle model deserialization
+            # 指定字段需要加密
+            fields_to_decrypt = ['address', 'currency_due_address', 'destination_address', 'tx_hash']
+
+            self.decrypt_fields(obj=data, fields_to_decrypt=fields_to_decrypt)
+
+            deserialized_obj = self.__deserialize_model(data, klass)
+
+            return deserialized_obj
+
+    # 遍历和解密的递归函数
+    def decrypt_fields(self, obj: Any, fields_to_decrypt: List[str]):
+        if isinstance(obj, dict):  # 如果是字典
+            for key, value in obj.items():
+                if key in fields_to_decrypt:
+                    obj[key] = self.decrypt(value)  # 解密
+                else:
+                    self.decrypt_fields(value, fields_to_decrypt)  # 递归调用
+
+        elif isinstance(obj, list):  # 如果是列表
+            for item in obj:
+                self.decrypt_fields(item, fields_to_decrypt)
+
 
     def parameters_to_tuples(self, params, collection_formats):
         """Get parameters as list of tuples, formatting collections.
@@ -807,3 +837,21 @@ class ApiClient:
         """
 
         return klass.from_dict(data)
+
+    def encrypt(self, val):
+        """Encrypt primitive type to enum.
+
+        :param val: primitive type.
+        :return: enum value.
+        """
+        return Utils.aes_encrypt(message=val, key=self.configuration.secret_key)
+
+    def decrypt(self, val):
+        """Encrypt primitive type to enum.
+
+        :param val: primitive type.
+        :return: enum value.
+        """
+        return Utils.aes_decrypt(message=val, key=self.configuration.secret_key)
+
+        pass

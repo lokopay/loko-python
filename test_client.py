@@ -5,7 +5,7 @@ from pprint import pprint
 # Defining the host is optional and defaults to https://api.lokopay.io/v1
 # See configuration.py for a list of all supported configuration parameters.
 configuration = loko_client.Configuration(
-    host = "https://api.lokopay.io/v1"
+    host = "https://api-test.lokopay.io/v1"
 )
 
 # The client must configure the authentication and authorization parameters
@@ -29,7 +29,7 @@ with loko_client.ApiClient(configuration) as api_client:
         currency='ETH',
         network='Ethereum',
         customer=loko_client.PaymentCustomer(
-            id='xxxx',
+            id='2',
             email='',
             ip_address='',
             destination_address='',
