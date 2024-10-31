@@ -20,6 +20,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from loko_client.models.transfer_with_native_token import TransferWithNativeToken
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -32,12 +33,15 @@ class DestinationNetworkDetail(BaseModel):
     destination_currency: Optional[StrictStr] = None
     destination_network: Optional[StrictStr] = None
     destination_network_description: Optional[StrictStr] = None
-    destination_transaction_fee: Optional[StrictStr] = None
+    destination_transaction_fee_fixed: Optional[StrictStr] = None
+    destination_transaction_fee_percentage: Optional[StrictStr] = None
+    destination_transaction_fee_type: Optional[StrictStr] = None
     destination_transaction_fee_currency: Optional[StrictStr] = None
     destination_network_fee: Optional[StrictStr] = None
     destination_network_fee_currency: Optional[StrictStr] = None
     destination_network_fee_monetary: Optional[StrictStr] = None
-    __properties: ClassVar[List[str]] = ["id", "destination_amount", "destination_currency", "destination_network", "destination_network_description", "destination_transaction_fee", "destination_transaction_fee_currency", "destination_network_fee", "destination_network_fee_currency", "destination_network_fee_monetary"]
+    transfer_with_native_token: Optional[TransferWithNativeToken] = None
+    __properties: ClassVar[List[str]] = ["id", "destination_amount", "destination_currency", "destination_network", "destination_network_description", "destination_transaction_fee_fixed", "destination_transaction_fee_percentage", "destination_transaction_fee_type", "destination_transaction_fee_currency", "destination_network_fee", "destination_network_fee_currency", "destination_network_fee_monetary", "transfer_with_native_token"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -78,6 +82,9 @@ class DestinationNetworkDetail(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of transfer_with_native_token
+        if self.transfer_with_native_token:
+            _dict['transfer_with_native_token'] = self.transfer_with_native_token.to_dict()
         return _dict
 
     @classmethod
@@ -95,11 +102,14 @@ class DestinationNetworkDetail(BaseModel):
             "destination_currency": obj.get("destination_currency"),
             "destination_network": obj.get("destination_network"),
             "destination_network_description": obj.get("destination_network_description"),
-            "destination_transaction_fee": obj.get("destination_transaction_fee"),
+            "destination_transaction_fee_fixed": obj.get("destination_transaction_fee_fixed"),
+            "destination_transaction_fee_percentage": obj.get("destination_transaction_fee_percentage"),
+            "destination_transaction_fee_type": obj.get("destination_transaction_fee_type"),
             "destination_transaction_fee_currency": obj.get("destination_transaction_fee_currency"),
             "destination_network_fee": obj.get("destination_network_fee"),
             "destination_network_fee_currency": obj.get("destination_network_fee_currency"),
-            "destination_network_fee_monetary": obj.get("destination_network_fee_monetary")
+            "destination_network_fee_monetary": obj.get("destination_network_fee_monetary"),
+            "transfer_with_native_token": TransferWithNativeToken.from_dict(obj["transfer_with_native_token"]) if obj.get("transfer_with_native_token") is not None else None
         })
         return _obj
 

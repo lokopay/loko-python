@@ -28,10 +28,10 @@ class TransferWithNativeToken(BaseModel):
     TransferWithNativeToken
     """ # noqa: E501
     enabled: Optional[StrictBool] = None
-    base_amount: Optional[StrictStr] = None
-    base_network: Optional[StrictStr] = None
-    base_currency: Optional[StrictStr] = None
-    __properties: ClassVar[List[str]] = ["enabled", "base_amount", "base_network", "base_currency"]
+    amount: Optional[StrictStr] = None
+    network: Optional[StrictStr] = None
+    currency: Optional[StrictStr] = None
+    __properties: ClassVar[List[str]] = ["enabled", "amount", "network", "currency"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -85,9 +85,9 @@ class TransferWithNativeToken(BaseModel):
 
         _obj = cls.model_validate({
             "enabled": obj.get("enabled"),
-            "base_amount": obj.get("base_amount"),
-            "base_network": obj.get("base_network"),
-            "base_currency": obj.get("base_currency")
+            "amount": obj.get("amount"),
+            "network": obj.get("network"),
+            "currency": obj.get("currency")
         })
         return _obj
 

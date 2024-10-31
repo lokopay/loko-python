@@ -106,7 +106,7 @@ Class | Method | HTTP request | Description
 *PaymentsApi* | [**refund_payment**](docs/PaymentsApi.md#refund_payment) | **POST** /payments/{id}/refund | Refund payment
 *PayoutsApi* | [**cancel_payout**](docs/PayoutsApi.md#cancel_payout) | **POST** /payouts/{id}/cancel | Cancel payout
 *PayoutsApi* | [**confirm_payout**](docs/PayoutsApi.md#confirm_payout) | **POST** /payouts/{id}/confirm | Confirm payout
-*PayoutsApi* | [**create_payout**](docs/PayoutsApi.md#create_payout) | **POST** /payouts | Create a payment
+*PayoutsApi* | [**create_payout**](docs/PayoutsApi.md#create_payout) | **POST** /payouts | Create a payout
 *PayoutsApi* | [**get_payout**](docs/PayoutsApi.md#get_payout) | **GET** /payouts/{id} | Get payout detail
 *PayoutsApi* | [**get_payouts**](docs/PayoutsApi.md#get_payouts) | **GET** /payouts | Get payouts
 

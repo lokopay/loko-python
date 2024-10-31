@@ -438,6 +438,9 @@ class ApiClient:
 
         return self.__deserialize(data, response_type)
 
+    def deserialize_obj(self, data, response_type):
+        return self.__deserialize(data, response_type)
+
     def __deserialize(self, data, klass):
         """Deserializes dict, list, str into an object.
 
@@ -854,4 +857,31 @@ class ApiClient:
         """
         return Utils.aes_decrypt(message=val, key=self.configuration.secret_key)
 
-        pass
+    def verify_signature(self, url, body, loko_signature):
+        """
+        Verify the webhook signature.
+
+        :param url: The request URL.
+        :param body: The request body.
+        :param loko_signature: The signature to verify.
+        :return: True if the signature is valid, False otherwise.
+        """
+        # Regular expression to extract nonce, timestamp, and signature
+        pattern = r'n=([^;]+);t=([^;]+);s=([^;]+)'
+        matches = re.findall(pattern, loko_signature)
+
+        if len(matches) == 1:
+            nonce = matches[0][0]
+            timestamp = matches[0][1]
+            signature = matches[0][2]
+        else:
+            return False
+
+        # Construct the message to sign
+        message = f"{url}{body}{nonce}{timestamp}"
+
+        # Calculate the HMAC signature
+        calculated_signature = Utils.generate_hmac(message, self.configuration.secret_key)
+
+        # Compare the calculated signature with the provided signature
+        return calculated_signature == signature

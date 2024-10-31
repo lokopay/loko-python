@@ -17,6 +17,7 @@ import io
 import json
 import re
 import ssl
+from pprint import pprint
 
 import urllib3
 
@@ -150,6 +151,8 @@ class RESTClientObject:
             raise ApiValueError(
                 "body parameter cannot be used with post_params parameter."
             )
+
+        pprint(body)
 
         post_params = post_params or {}
         headers = headers or {}

@@ -6,7 +6,7 @@ Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**cancel_payout**](PayoutsApi.md#cancel_payout) | **POST** /payouts/{id}/cancel | Cancel payout
 [**confirm_payout**](PayoutsApi.md#confirm_payout) | **POST** /payouts/{id}/confirm | Confirm payout
-[**create_payout**](PayoutsApi.md#create_payout) | **POST** /payouts | Create a payment
+[**create_payout**](PayoutsApi.md#create_payout) | **POST** /payouts | Create a payout
 [**get_payout**](PayoutsApi.md#get_payout) | **GET** /payouts/{id} | Get payout detail
 [**get_payouts**](PayoutsApi.md#get_payouts) | **GET** /payouts | Get payouts
 
@@ -175,7 +175,7 @@ Name | Type | Description  | Notes
 # **create_payout**
 > Payout create_payout(create_pout_request)
 
-Create a payment
+Create a payout
 
 ### Example
 
@@ -212,7 +212,7 @@ with loko_client.ApiClient(configuration) as api_client:
     create_pout_request = loko_client.CreatePayoutRequest() # CreatePayoutRequest | 
 
     try:
-        # Create a payment
+        # Create a payout
         api_response = api_instance.create_payout(create_pout_request)
         print("The response of PayoutsApi->create_payout:\n")
         pprint(api_response)

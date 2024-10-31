@@ -1,3 +1,5 @@
+from time import sleep
+
 import loko_client
 from loko_client.rest import ApiException
 from pprint import pprint
@@ -45,35 +47,35 @@ with loko_client.ApiClient(configuration) as api_client:
     #     print("Exception when calling CustomerWalletsApi->create_customer_wallet: %s\n" % e)
 
     api_instance = loko_client.PayoutsApi(api_client)
-    # create_payout_request = loko_client.CreatePayoutRequest(
-    #     amount='1000',
-    #     currency='USDC',
-    #     description='',
-    #     customer=loko_client.models.payment_customer.PaymentCustomer(
-    #         id='xxxx',
-    #         email='',
-    #         ip_address='',
-    #         destination_address='0x263D4511b16561B440D3FD23d053100bE13A7bC0',
-    #         destination_network='Ethereum',
-    #         destination_currency='USDC', ),
-    #     transfer_with_native_token=loko_client.models.transfer_with_native_token.TransferWithNativeToken(
-    #         enabled=False,
-    #         base_amount='',
-    #         base_network='',
-    #         base_currency='', )
-    # )
-    # try:
-    #     # Create a payout
-    #     api_response = api_instance.create_payout(create_payout_request)
-    #     print("The response of PayoutsApi->create_payout:\n")
-    #     pprint(api_response)
-    # except ApiException as e:
-    #     print("Exception when calling PayoutsApi->create_payout: %s\n" % e)
-    #
-    # exit(0)
+    create_payout_request = loko_client.CreatePayoutRequest(
+        amount='1000',
+        currency='USDC',
+        description='',
+        customer=loko_client.models.payment_customer.PaymentCustomer(
+            id='xxxx',
+            email='',
+            ip_address='',
+            destination_address='0x263D4511b16561B440D3FD23d053100bE13A7bC0',
+            destination_network='Ethereum',
+            destination_currency='USDC', ),
+        transfer_with_native_token=loko_client.models.transfer_with_native_token.TransferWithNativeToken(
+            enabled=False,
+            base_amount='',
+            base_network='',
+            base_currency='', )
+    )
+    try:
+        # Create a payout
+        api_response = api_instance.create_payout(create_payout_request)
+        print("The response of PayoutsApi->create_payout:\n")
+        pprint(api_response)
+    except ApiException as e:
+        print("Exception when calling PayoutsApi->create_payout: %s\n" % e)
 
-    payout_id = '3411f01c-1b29-4ec5-9c4c-44d22d0e2e29'
-    loko_object_secret = 'erDZuHFsbIBRTsiMzeOUCiMHAKVttLlN'
+    sleep(5)
+
+    payout_id =api_response.id
+    loko_object_secret = api_response.obj_secret
 
     try:
         # get a payout

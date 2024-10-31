@@ -1,0 +1,9 @@
+# constants.py
+
+# 定义常量
+WEBHOOK_EVENT_TYPE_PAYMENT_DEPOSITED = "payment.deposited"
+WEBHOOK_EVENT_TYPE_PAYMENT_FAILED = "payment.failed"
+WEBHOOK_EVENT_TYPE_PAYMENT_EXPIRED = "payment.expired"
+WEBHOOK_EVENT_TYPE_PAYOUT_PENDING = "payout.pending"
+WEBHOOK_EVENT_TYPE_PAYOUT_FAILED = "payout.failed"
+WEBHOOK_EVENT_TYPE_PAYOUT_SUCCEEDED = "payout.succeeded"

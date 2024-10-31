@@ -6,9 +6,9 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **enabled** | **bool** |  | [optional] 
-**base_amount** | **str** |  | [optional] 
-**base_network** | **str** |  | [optional] 
-**base_currency** | **str** |  | [optional] 
+**amount** | **str** |  | [optional] 
+**network** | **str** |  | [optional] 
+**currency** | **str** |  | [optional] 
 
 ## Example
 

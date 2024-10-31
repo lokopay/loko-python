@@ -10,11 +10,14 @@ Name | Type | Description | Notes
 **destination_currency** | **str** |  | [optional] 
 **destination_network** | **str** |  | [optional] 
 **destination_network_description** | **str** |  | [optional] 
-**destination_transaction_fee** | **str** |  | [optional] 
+**destination_transaction_fee_fixed** | **str** |  | [optional] 
+**destination_transaction_fee_percentage** | **str** |  | [optional] 
+**destination_transaction_fee_type** | **str** |  | [optional] 
 **destination_transaction_fee_currency** | **str** |  | [optional] 
 **destination_network_fee** | **str** |  | [optional] 
 **destination_network_fee_currency** | **str** |  | [optional] 
 **destination_network_fee_monetary** | **str** |  | [optional] 
+**transfer_with_native_token** | [**TransferWithNativeToken**](TransferWithNativeToken.md) |  | [optional] 
 
 ## Example
 
