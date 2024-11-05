@@ -152,8 +152,6 @@ class RESTClientObject:
                 "body parameter cannot be used with post_params parameter."
             )
 
-        pprint(body)
-
         post_params = post_params or {}
         headers = headers or {}
 
