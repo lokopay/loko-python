@@ -24,7 +24,7 @@ webhook_event_api = loko_client.WebhookEventApi(api_client)
 
 app = Flask(__name__)
 
-request_url = "https://405d-96-45-190-72.ngrok-free.app/webhook"
+request_url = "https://590b-121-35-101-167.ngrok-free.app/webhook"
 
 
 @app.route('/webhook', methods=['POST'])
@@ -43,7 +43,7 @@ def webhook():
     if res is not None:
         # 处理数据
         event_type = res.get("type")
-        if event_type in [loko_client.constants.WEBHOOK_EVENT_TYPE_PAYMENT_DEPOSITED, loko_client.constants.WEBHOOK_EVENT_TYPE_PAYMENT_EXPIRED, loko_client.constants.WEBHOOK_EVENT_TYPE_PAYMENT_FAILED]:
+        if event_type in [loko_client.constants.WEBHOOK_EVENT_TYPE_PAYMENT_DEPOSITED, loko_client.constants.WEBHOOK_EVENT_TYPE_PAYMENT_EXPIRED, loko_client.constants.WEBHOOK_EVENT_TYPE_PAYMENT_FAILED, loko_client.constants.WEBHOOK_EVENT_TYPE_PAYMENT_SUCCEEDED]:
             payment = api_client.deserialize_obj(res.get("data"), "Payment")
             pprint(payment)
         elif event_type in [loko_client.constants.WEBHOOK_EVENT_TYPE_PAYOUT_SUCCEEDED, loko_client.constants.WEBHOOK_EVENT_TYPE_PAYOUT_PENDING, loko_client.constants.WEBHOOK_EVENT_TYPE_PAYOUT_FAILED]:

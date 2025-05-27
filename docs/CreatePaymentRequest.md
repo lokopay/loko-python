@@ -7,6 +7,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **amount** | **str** |  | [optional] 
 **currency** | **str** |  | [optional] 
+**currency_type** | **str** |  | [optional] 
 **description** | **str** |  | [optional] 
 **customer** | [**PaymentCustomer**](PaymentCustomer.md) |  | [optional] 
 **order** | [**Order**](Order.md) |  | [optional] 

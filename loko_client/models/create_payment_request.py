@@ -31,10 +31,11 @@ class CreatePaymentRequest(BaseModel):
     """ # noqa: E501
     amount: Optional[StrictStr] = None
     currency: Optional[StrictStr] = None
+    currency_type: Optional[StrictStr] = None
     description: Optional[StrictStr] = None
     customer: Optional[PaymentCustomer] = None
     order: Optional[Order] = None
-    __properties: ClassVar[List[str]] = ["amount", "currency", "description", "customer", "order"]
+    __properties: ClassVar[List[str]] = ["amount", "currency", "currency_type", "description", "customer", "order"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -95,6 +96,7 @@ class CreatePaymentRequest(BaseModel):
         _obj = cls.model_validate({
             "amount": obj.get("amount"),
             "currency": obj.get("currency"),
+            "currency_type": obj.get("currency_type"),
             "description": obj.get("description"),
             "customer": PaymentCustomer.from_dict(obj["customer"]) if obj.get("customer") is not None else None,
             "order": Order.from_dict(obj["order"]) if obj.get("order") is not None else None

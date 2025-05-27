@@ -34,24 +34,27 @@ class Payment(BaseModel):
     object: Optional[StrictStr] = None
     amount: Optional[StrictStr] = None
     currency: Optional[StrictStr] = None
+    currency_type: Optional[StrictStr] = None
     amount_paid: Optional[StrictStr] = None
     currency_paid: Optional[StrictStr] = None
     amount_due: Optional[StrictStr] = None
     currency_due: Optional[StrictStr] = None
     currency_due_network: Optional[StrictStr] = None
     currency_due_address: Optional[StrictStr] = None
+    currency_due_address_only: Optional[StrictStr] = None
     description: Optional[StrictStr] = None
     customer: Optional[PaymentCustomer] = None
     supported_cryptocurrencies: Optional[List[CryptoCurrency]] = None
     blockchain_transaction_details: Optional[List[BlockchainTransactionDetail]] = None
     price_expires_at: Optional[StrictInt] = None
+    address_expires_at: Optional[StrictInt] = None
     expires_at: Optional[StrictInt] = None
     canceled_at: Optional[StrictInt] = None
     status: Optional[StrictStr] = None
     created_at: Optional[StrictInt] = None
     obj_secret: Optional[StrictStr] = None
     failed_reason: Optional[StrictStr] = None
-    __properties: ClassVar[List[str]] = ["id", "object", "amount", "currency", "amount_paid", "currency_paid", "amount_due", "currency_due", "currency_due_network", "currency_due_address", "description", "customer", "supported_cryptocurrencies", "blockchain_transaction_details", "price_expires_at", "expires_at", "canceled_at", "status", "created_at", "obj_secret", "failed_reason"]
+    __properties: ClassVar[List[str]] = ["id", "object", "amount", "currency", "currency_type", "amount_paid", "currency_paid", "amount_due", "currency_due", "currency_due_network", "currency_due_address", "currency_due_address_only", "description", "customer", "supported_cryptocurrencies", "blockchain_transaction_details", "price_expires_at", "address_expires_at", "expires_at", "canceled_at", "status", "created_at", "obj_secret", "failed_reason"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -125,17 +128,20 @@ class Payment(BaseModel):
             "object": obj.get("object"),
             "amount": obj.get("amount"),
             "currency": obj.get("currency"),
+            "currency_type": obj.get("currency_type"),
             "amount_paid": obj.get("amount_paid"),
             "currency_paid": obj.get("currency_paid"),
             "amount_due": obj.get("amount_due"),
             "currency_due": obj.get("currency_due"),
             "currency_due_network": obj.get("currency_due_network"),
             "currency_due_address": obj.get("currency_due_address"),
+            "currency_due_address_only": obj.get("currency_due_address_only"),
             "description": obj.get("description"),
             "customer": PaymentCustomer.from_dict(obj["customer"]) if obj.get("customer") is not None else None,
             "supported_cryptocurrencies": [CryptoCurrency.from_dict(_item) for _item in obj["supported_cryptocurrencies"]] if obj.get("supported_cryptocurrencies") is not None else None,
             "blockchain_transaction_details": [BlockchainTransactionDetail.from_dict(_item) for _item in obj["blockchain_transaction_details"]] if obj.get("blockchain_transaction_details") is not None else None,
             "price_expires_at": obj.get("price_expires_at"),
+            "address_expires_at": obj.get("address_expires_at"),
             "expires_at": obj.get("expires_at"),
             "canceled_at": obj.get("canceled_at"),
             "status": obj.get("status"),

@@ -31,8 +31,9 @@ with loko_client.ApiClient(configuration) as api_client:
     createPaymetRequest = loko_client.CreatePaymentRequest(
         customer=customer,
         amount = "1000",#充值10U, USDC的最小单位cents
-        currency="USDC"
-    )    
+        currency="USDC",
+        # currency_type="fixed"
+    )
     #1,create a payment
     print("start create payment")
     try:
@@ -40,6 +41,7 @@ with loko_client.ApiClient(configuration) as api_client:
     except ApiException as e:
         print("Exception when calling PaymentsApi->create_payment: %s\n" % e)
         sys.exit()
+
 
     #2,retrieve the payment for prices
     print("start retrieve payment for prices")
@@ -58,13 +60,17 @@ with loko_client.ApiClient(configuration) as api_client:
             sys.exit()
     pickedCrypto = None
     for crypto_currency in payment.supported_cryptocurrencies:
-        #选择以太坊网络的USDC币种  
-        if crypto_currency.network == "Ethereum"  and crypto_currency.price_pair == "USDC-USDC":  
+        #选择以太坊网络的USDT币种
+        if crypto_currency.network == "Ethereum"  and crypto_currency.price_pair == "USDT-USDC":
             pickedCrypto = crypto_currency  
             break 
     if pickedCrypto is None:
         print("no supported crypto currency")
         sys.exit()
+
+    print(pickedCrypto)
+    sys.exit()
+
     #3,confirm payment   
     print("start confirm payment")
     confirmPaymentRequest = loko_client.ConfirmPaymentRequest(cryptocurrency=pickedCrypto)
