@@ -276,8 +276,7 @@ class ApiClient:
         # 生成一个新的 UUID
         nonce = str(uuid.uuid4())
         # 当 body 为 None 时使用空字符串，避免 json.dumps(None) 返回 "null"
-        body = json.dumps(body) if body is not None else ""
-        message = url + body + nonce + timestamp
+        message = url +(json.dumps(body) if body is not None else "")+ nonce + timestamp
         signature = Utils.generate_hmac(message, self.configuration.secret_key)
         header_params['loko-timestamp'] = timestamp
         header_params['loko-nonce'] = nonce
