@@ -97,9 +97,8 @@ class PaymentCustomer(BaseModel):
         })
         return _obj
 
-    @classmethod
-    def set_destination_address_type(cls, destination_address_type: StrictStr) -> Self:
+    def set_destination_address_type(self, destination_address_type: StrictStr) -> None:
         """Set the destination address type"""
-        return cls(destination_address_type=destination_address_type)
+        self.destination_address_type = destination_address_type
 
 
