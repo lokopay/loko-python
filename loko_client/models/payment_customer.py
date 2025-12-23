@@ -33,7 +33,8 @@ class PaymentCustomer(BaseModel):
     destination_address: Optional[StrictStr] = None
     destination_network: Optional[StrictStr] = None
     destination_currency: Optional[StrictStr] = None
-    __properties: ClassVar[List[str]] = ["id", "email", "ip_address", "destination_address", "destination_network", "destination_currency"]
+    destination_address_type: Optional[StrictStr] = None
+    __properties: ClassVar[List[str]] = ["id", "email", "ip_address", "destination_address", "destination_network", "destination_currency","destination_address_type"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -91,8 +92,14 @@ class PaymentCustomer(BaseModel):
             "ip_address": obj.get("ip_address"),
             "destination_address": obj.get("destination_address"),
             "destination_network": obj.get("destination_network"),
-            "destination_currency": obj.get("destination_currency")
+            "destination_currency": obj.get("destination_currency"),
+            "destination_address_type": obj.get("destination_address_type")
         })
         return _obj
+
+    @classmethod
+    def set_destination_address_type(cls, destination_address_type: StrictStr) -> Self:
+        """Set the destination address type"""
+        return cls(destination_address_type=destination_address_type)
 
 
